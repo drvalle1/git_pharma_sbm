@@ -14,6 +14,8 @@ SBM=function(dat,size,ngroup.loc,ngroup.spp,gamma.v,gamma.u,ngibbs){
   datnmy=size-dat
   vec.llk.prior=rep(NA,ngibbs)
   vec.theta=matrix(NA,ngibbs,ngroup.loc)
+  vec.z=matrix(NA,ngibbs,nloc)
+  vec.w=matrix(NA,ngibbs,nspp)
   vec.phi=matrix(NA,ngibbs,ngroup.spp)
   vec.psi=matrix(NA,ngibbs,ngroup.spp*ngroup.loc)
   param=list(z=z,w=w,psi=psi,theta=theta,phi=phi)
@@ -21,7 +23,7 @@ SBM=function(dat,size,ngroup.loc,ngroup.spp,gamma.v,gamma.u,ngibbs){
   #start gibbs sampler
   options(warn=2)
   for (i in 1:ngibbs){
-    # print(i)
+    print(i)
     param$psi=sample.psi(param=param,dat=dat,datnmy=datnmy,
                          ngroup.loc=ngroup.loc,ngroup.spp=ngroup.spp)
     # param$psi=rbind(cbind(psi.true,0.01,0.01,0.01,0.01,0.01,0.01,0.01),0.01,0.01,0.01,0.01,0.01)  
@@ -63,6 +65,8 @@ SBM=function(dat,size,ngroup.loc,ngroup.spp,gamma.v,gamma.u,ngibbs){
     vec.theta[i,]=param$theta
     vec.phi[i,]=param$phi
     vec.psi[i,]=param$psi
+    vec.w[i,]=param$w
+    vec.z[i,]=param$z
   }
-  list(theta=vec.theta,phi=vec.phi,llk=vec.llk.prior,psi=vec.psi,z=param$z,w=param$w)
+  list(theta=vec.theta,phi=vec.phi,llk=vec.llk.prior,psi=vec.psi,z=vec.z,w=vec.w)
 }
